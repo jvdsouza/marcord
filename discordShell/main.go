@@ -40,7 +40,9 @@ func apiShell(api API) func(s *discordgo.Session, m *discordgo.MessageCreate) {
 	return func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		message, _ := getMessage(s, m)
 		processedMessage := api.ProcessTextMessage(message)
-		sendMessage(s, m)(processedMessage)
+		if len(processedMessage) > 0 {
+			sendMessage(s, m)(processedMessage)
+		}
 	}
 }
 
