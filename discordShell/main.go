@@ -38,7 +38,9 @@ func Launch(botToken string, api API) {
 
 func apiShell(api API) func(s *discordgo.Session, m *discordgo.MessageCreate) {
 	return func(s *discordgo.Session, m *discordgo.MessageCreate) {
-		message, _ := getMessage(s, m)
+		prefix := os.Getenv("BOT_PREFIX")
+		message, _ := getMessage(s, m, prefix)
+
 		processedMessage := api.ProcessTextMessage(message)
 		if len(processedMessage) > 0 {
 			sendMessage(s, m)(processedMessage)
@@ -46,12 +48,16 @@ func apiShell(api API) func(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 }
 
-func getMessage(s *discordgo.Session, m *discordgo.MessageCreate) (string, error) {
+func getMessage(s *discordgo.Session, m *discordgo.MessageCreate, prefix string) (string, error) {
 	if m.Author.ID == s.State.User.ID {
 		return "", errors.New("Author is this bot")
 	}
 
-	return m.Content, nil
+	if m.Content[0:len(prefix)] == prefix {
+		return m.Content[len(prefix):len(m.Content)], nil
+	}
+
+	return "", nil
 }
 
 func sendMessage(s *discordgo.Session, m *discordgo.MessageCreate) func(m string) {
