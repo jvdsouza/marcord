@@ -15,7 +15,7 @@ type API interface {
 	ProcessTextMessage(s string) string
 }
 
-func LaunchShell(botToken string, api API) {
+func Launch(botToken string, api API) {
 	discord, err := discordgo.New("Bot " + botToken)
 	if err != nil {
 		log.Fatal("Error creating new discord session: ", err)

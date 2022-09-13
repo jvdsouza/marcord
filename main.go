@@ -11,5 +11,5 @@ import (
 func main() {
 	var markovapi markovapi.MarkovAPI
 	botToken := os.Getenv("BOT_TOKEN")
-	discordshell.LaunchShell(botToken, markovapi)
+	discordshell.Launch(botToken, markovapi)
 }
